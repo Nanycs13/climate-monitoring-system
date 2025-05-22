@@ -102,5 +102,17 @@ public class UsuarioRepository {
 
         usuarios.add(usuario);
         return salvarTodos(usuarios);
+
+    }
+
+    public boolean atualizar(Usuario usuarioAtualizado) {
+        List<Usuario> usuarios = listarTodos();
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getEmail().equals(usuarioAtualizado.getEmail())) {
+                usuarios.set(i, usuarioAtualizado);
+                return salvarTodos(usuarios);
+            }
+        }
+        return false;
     }
 }

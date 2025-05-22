@@ -9,11 +9,12 @@ import com.example.climatemonitoring.models.observers.Observer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 /**
- * Serviço para gerenciamento de dados climáticos.
+ * Serviço para gerenciamento de dados climáticos de Luís Eduardo Magalhães -
+ * BA.
+ * Especializado no monitoramento climático para agricultura no oeste da Bahia.
  * Segue o princípio SRP ao ter apenas a responsabilidade de gerenciar dados
- * climáticos.
+ * climáticos específicos de LEM.
  * Segue o princípio DIP ao depender de abstrações (API) injetadas via
  * construtor.
  */
@@ -28,23 +29,22 @@ public class ClimaService {
     }
 
     /**
-     * Obtém os dados climáticos atuais para uma localização.
+     * Obtém os dados climáticos atuais de Luís Eduardo Magalhães.
      * 
-     * @param localizacao Nome da localização
-     * @return Objeto Clima com os dados atuais
+     * @return Objeto Clima com os dados atuais de LEM
      */
-    public Clima obterDadosClimaticos(String localizacao) {
-        return climaAPI.obterDadosClimaticos(localizacao);
+    public Clima obterDadosClimaticos() {
+        return climaAPI.obterDadosClimaticos();
     }
 
     /**
-     * Obtém a análise de risco para plantio nos próximos dias.
+     * Obtém a análise de risco para plantio nos próximos dias em Luís Eduardo
+     * Magalhães.
      * 
-     * @param localizacao Nome da localização
      * @return Array de strings com a análise para cada dia
      */
-    public String[] obterAnaliseRisco(String localizacao) {
-        return climaAPI.obterAnaliseRisco(localizacao);
+    public String[] obterAnaliseRisco() {
+        return climaAPI.obterAnaliseRisco();
     }
 
     /**
@@ -75,38 +75,54 @@ public class ClimaService {
     }
 
     /**
-     * Gera um boletim climático formatado.
+     * Gera um boletim climático formatado para Luís Eduardo Magalhães.
      * 
-     * @param localizacao Nome da localização
-     * @return String formatada com o boletim climático
+     * @return String formatada com o boletim climático de LEM
      */
-    public String gerarBoletimClimatico(String localizacao) {
-        Clima clima = obterDadosClimaticos(localizacao);
+    public String gerarBoletimClimatico() {
+        try {
+            Clima clima = obterDadosClimaticos();
 
-        // Simulação de data e hora
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        String dataHora = LocalDateTime.now().format(formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            String dataHora = LocalDateTime.now().format(formatter);
 
+            StringBuilder boletim = new StringBuilder();
+            boletim.append("=== BOLETIM CLIMÁTICO - LUÍS EDUARDO MAGALHÃES/BA ===\n");
+            boletim.append("Data/Hora: ").append(dataHora).append("\n");
+            boletim.append("Localização: ").append(clima.getLocalizacao()).append("\n\n");
 
-        // Simulação de sensação térmica (temperatura + fator aleatório)
-        double sensacaoTermica = clima.getTemperatura() + (Math.random() * 5 - 2);
+            boletim.append("CONDIÇÕES ATUAIS:\n");
+            boletim.append(String.format("🌡️  Temperatura: %.1fºC\n", clima.getTemperatura()));
+            boletim.append(String.format("💧 Umidade: %.0f%%\n", clima.getUmidade()));
+            boletim.append(String.format("☁️  Condições: %s\n\n", clima.getCondicoes()));
 
-        // Simulação de velocidade do vento
-        double velocidadeVento = 5 + Math.random() * 15;
+            // Adicionar análise de risco para agricultura
+            boletim.append("ANÁLISE AGRÍCOLA - PRÓXIMOS 3 DIAS:\n");
+            String[] analiseRisco = obterAnaliseRisco();
+            for (String risco : analiseRisco) {
+                boletim.append("📊 ").append(risco).append("\n");
+            }
 
-        // Simulação de previsão de chuva
-        double previsaoChuva = Math.random() * 5;
+            boletim.append("\n=== REGIÃO OESTE DA BAHIA - AGRICULTURA SUSTENTÁVEL ===");
 
-        StringBuilder boletim = new StringBuilder();
-        boletim.append("Boletim Atual – ").append(localizacao).append("\n");
-        boletim.append("Data: ").append(dataHora).append("\n");
-        boletim.append(String.format("Temperatura: %.1fºC | Sensação: %.1fºC\n",
-                clima.getTemperatura(), sensacaoTermica));
-        boletim.append(String.format("Umidade: %.0f%% | Vento: %.1f km/h\n",
-                clima.getUmidade(), velocidadeVento));
-        boletim.append(String.format("Céu: %s | Previsão de chuva: %.1f mm",
-                clima.getCondicoes(), previsaoChuva));
+            return boletim.toString();
 
-        return boletim.toString();
+        } catch (Exception e) {
+            return "❌ Erro ao gerar boletim climático de Luís Eduardo Magalhães: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Verifica se a API está funcionando corretamente para Luís Eduardo Magalhães.
+     * 
+     * @return true se a API estiver respondendo, false caso contrário
+     */
+    public boolean verificarStatusAPI() {
+        try {
+            obterDadosClimaticos();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -17,6 +17,8 @@ public class UsuarioService {
     public Usuario autenticar(String email, String senha) {
         Usuario usuario = usuarioRepository.buscarPorEmail(email);
         if (usuario != null && senha.equals(usuario.getSenha())) {
+            usuario.setLogado(true);
+            usuarioRepository.atualizar(usuario);
             return usuario;
         }
         return null;
@@ -31,6 +33,18 @@ public class UsuarioService {
         return usuarioRepository.adicionar(novoUsuario);
     }
 
+    public List<Usuario> getUsuariosLogados() {
+        List<Usuario> todos = usuarioRepository.listarTodos();
+        return todos.stream()
+                .filter(Usuario::isLogado)
+                .toList();
+    }
+
+    /**
+     * Lista todos os usuários cadastrados no sistema.
+     * 
+     * @return Lista de todos os usuários
+     */
     public List<Usuario> listarTodos() {
         return usuarioRepository.listarTodos();
     }
