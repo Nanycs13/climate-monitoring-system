@@ -45,13 +45,10 @@ public class MenuUsuario {
         contadorNotificacoes = 0;
         usuario.setLogado(true);
 
-        // Cria um observador para o usuário
         UsuarioObserver observador = new UsuarioObserver(usuario);
 
-        // Adiciona o observador para receber notificações
         climaService.adicionarObservador(observador);
 
-        // Inicia as notificações automáticas a cada 20 segundos
         iniciarNotificacoesAutomaticas(usuario, observador);
 
         boolean sair = false;
@@ -85,7 +82,6 @@ public class MenuUsuario {
     private void exibirMenuPrincipal(Usuario usuario) {
         terminal.limparTela();
 
-        // Cabeçalho com informações em tempo real
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String agora = LocalDateTime.now().format(formatter);
 
@@ -110,10 +106,8 @@ public class MenuUsuario {
                 try {
                     contadorNotificacoes++;
 
-                    // Gera um novo boletim climático de São Desidério
                     String boletimAutomatico = climaService.gerarBoletimClimatico();
 
-                    // Cria uma versão simplificada para notificação em tempo real
                     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
                     String timestamp = LocalDateTime.now().format(timeFormatter);
 
@@ -123,17 +117,14 @@ public class MenuUsuario {
                                     "============================\n",
                             contadorNotificacoes, timestamp, boletimAutomatico);
 
-                    // Registra a notificação completa no histórico
                     String mensagemCompleta = String.format(
                             "NOTIFICAÇÃO AUTOMÁTICA #%d\n%s\n\n%s",
                             contadorNotificacoes, timestamp, boletimAutomatico);
 
                     notificacaoService.registrarNotificacao(mensagemCompleta);
 
-                    // Exibe a notificação em tempo real no terminal
                     terminal.exibirNotificacaoEmTempoReal(notificacaoSimples);
 
-                    // Adiciona alertas especiais baseados nos dados
                     verificarAlertasEspeciais(usuario);
 
                 } catch (Exception e) {
@@ -147,7 +138,6 @@ public class MenuUsuario {
         try {
             var clima = climaService.obterDadosClimaticos();
 
-            // Alerta de temperatura extrema
             if (clima.getTemperatura() > 38) {
                 String alerta = "ALERTA TEMPERATURA ALTA: " + String.format("%.1f°C", clima.getTemperatura()) +
                         "\nRisco para plantações em São Desidério!";
@@ -155,7 +145,6 @@ public class MenuUsuario {
                 notificacaoService.registrarNotificacao("ALERTA CRÍTICO: " + alerta);
             }
 
-            // Alerta de umidade baixa
             if (clima.getUmidade() < 20) {
                 String alerta = "ALERTA UMIDADE BAIXA: " + String.format("%.0f%%", clima.getUmidade()) +
                         "\nConsidere irrigação adicional!";
@@ -164,14 +153,12 @@ public class MenuUsuario {
             }
 
         } catch (Exception e) {
-            // Ignora erros silenciosamente para não interromper o fluxo
         }
     }
 
     private void realizarLogout(Usuario usuario, UsuarioObserver observador) {
         menuAtivo = false;
 
-        // Para o agendador de notificações
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
             try {
@@ -184,16 +171,12 @@ public class MenuUsuario {
             }
         }
 
-        // Remove o observador ao fazer logout
         climaService.removerObservador(observador);
 
-        // Para o agendador de notificações do sistema
         notificacaoScheduler.pararScheduler();
 
-        // Marca usuário como deslogado
         usuario.setLogado(false);
 
-        // Mensagem de despedida
         String mensagemLogout = String.format(
                 "LOGOUT REALIZADO - %s\n" +
                         "Total de notificações recebidas: %d\n" +

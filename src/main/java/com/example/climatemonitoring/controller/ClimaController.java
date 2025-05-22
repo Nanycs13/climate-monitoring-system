@@ -5,10 +5,7 @@ import com.example.climatemonitoring.models.Clima;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Controller REST para dados climáticos de Luís Eduardo Magalhães - BA.
- * Especializado no monitoramento climático para agricultura no oeste da Bahia.
- */
+
 @RestController
 @RequestMapping("/api/clima")
 @CrossOrigin(origins = "*")
@@ -20,11 +17,7 @@ public class ClimaController {
         this.climaService = climaService;
     }
 
-    /**
-     * Endpoint para obter dados climáticos atuais de Luís Eduardo Magalhães.
-     * 
-     * @return ResponseEntity com dados climáticos atuais
-     */
+
     @GetMapping("/atual")
     public ResponseEntity<?> obterClimaAtual() {
         try {
@@ -36,11 +29,7 @@ public class ClimaController {
         }
     }
 
-    /**
-     * Endpoint para obter o boletim climático completo de LEM.
-     * 
-     * @return ResponseEntity com boletim climático formatado
-     */
+
     @GetMapping("/boletim")
     public ResponseEntity<String> obterBoletimClimatico() {
         try {
@@ -52,11 +41,7 @@ public class ClimaController {
         }
     }
 
-    /**
-     * Endpoint para obter análise de risco agrícola de LEM.
-     * 
-     * @return ResponseEntity com análise de risco para os próximos dias
-     */
+
     @GetMapping("/risco-agricola")
     public ResponseEntity<?> obterAnaliseRisco() {
         try {
@@ -68,11 +53,7 @@ public class ClimaController {
         }
     }
 
-    /**
-     * Endpoint para verificar status da API.
-     * 
-     * @return ResponseEntity indicando se a API está funcionando
-     */
+
     @GetMapping("/status")
     public ResponseEntity<String> verificarStatus() {
         boolean status = climaService.verificarStatusAPI();
@@ -84,11 +65,7 @@ public class ClimaController {
         }
     }
 
-    /**
-     * Endpoint para dashboard - dados resumidos para interface.
-     * 
-     * @return ResponseEntity com dados essenciais para dashboard
-     */
+
     @GetMapping("/dashboard")
     public ResponseEntity<?> obterDadosDashboard() {
         try {
@@ -112,9 +89,7 @@ public class ClimaController {
         }
     }
 
-    /**
-     * Determina o status geral das condições climáticas para agricultura.
-     */
+
     private String determinarStatusGeral(double temperatura, double umidade) {
         if (temperatura >= 20 && temperatura <= 30 && umidade >= 50 && umidade <= 80) {
             return "IDEAL";

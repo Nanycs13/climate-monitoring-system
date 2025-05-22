@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 
-/**
- * API para obtenção de dados climáticos reais usando latitude e longitude.
- */
+
 @Service
 public class ClimaAPI implements ClimaAPIInterface {
 

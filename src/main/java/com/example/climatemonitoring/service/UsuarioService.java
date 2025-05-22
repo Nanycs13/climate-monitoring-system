@@ -40,11 +40,7 @@ public class UsuarioService {
                 .toList();
     }
 
-    /**
-     * Lista todos os usuários cadastrados no sistema.
-     * 
-     * @return Lista de todos os usuários
-     */
+
     public List<Usuario> listarTodos() {
         return usuarioRepository.listarTodos();
     }

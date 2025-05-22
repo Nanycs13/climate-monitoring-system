@@ -6,6 +6,8 @@ import com.example.climatemonitoring.service.NotificacaoScheduler;
 import com.example.climatemonitoring.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.context.ConfigurableApplicationContext; // Importar para acesso ao contexto da aplicação
+import org.springframework.boot.SpringApplication; // Importar para encerrar a aplicação
 
 @Component
 public class MenuPrincipal {
@@ -14,15 +16,18 @@ public class MenuPrincipal {
     private MenuUsuario menuUsuario;
     private ClimaService climaService;
     private NotificacaoScheduler notificacaoScheduler;
+    private ConfigurableApplicationContext context;
 
     @Autowired
     public MenuPrincipal(TerminalUtil terminal, UsuarioService usuarioService,
-            MenuUsuario menuUsuario, ClimaService climaService, NotificacaoScheduler notificacaoScheduler) {
+                         MenuUsuario menuUsuario, ClimaService climaService,
+                         NotificacaoScheduler notificacaoScheduler, ConfigurableApplicationContext context) {
         this.terminal = terminal;
         this.usuarioService = usuarioService;
         this.menuUsuario = menuUsuario;
         this.climaService = climaService;
         this.notificacaoScheduler = notificacaoScheduler;
+        this.context = context;
     }
 
     public void exibir() {
@@ -59,6 +64,7 @@ public class MenuPrincipal {
                     sair = true;
                     terminal.exibirMensagem("Obrigado por usar o Sistema de Monitoramento de São Desidério!");
                     terminal.exibirMensagem("Até logo!");
+                    SpringApplication.exit(context, () -> 0);
                     break;
                 default:
                     terminal.exibirMensagem("Opção inválida!");
@@ -79,7 +85,7 @@ public class MenuPrincipal {
         if (usuario != null) {
             terminal.exibirMensagem("Login realizado com sucesso!");
             terminal.exibirMensagem("Preparando dados climáticos de São Desidério...");
-            notificacaoScheduler.reiniciarScheduler(); // Ativa o agendador no login
+            notificacaoScheduler.reiniciarScheduler();
             terminal.pausar();
             menuUsuario.exibir(usuario);
         } else {
@@ -106,7 +112,7 @@ public class MenuPrincipal {
             Usuario usuario = usuarioService.autenticar(email, senha);
             if (usuario != null) {
                 terminal.exibirMensagem("Login automático realizado!");
-                notificacaoScheduler.reiniciarScheduler(); // Ativa o agendador no login automático
+                notificacaoScheduler.reiniciarScheduler();
                 terminal.pausar();
                 menuUsuario.exibir(usuario);
             }
@@ -152,7 +158,7 @@ public class MenuPrincipal {
                 terminal.exibirMensagem("Conexão com OpenWeatherMap: OK");
                 terminal.exibirMensagem("Dados de São Desidério: Disponíveis");
 
-                // Mostra dados de exemplo
+
                 var clima = climaService.obterDadosClimaticos();
                 terminal.exibirMensagem("");
                 terminal.exibirMensagem("Dados de teste obtidos:");

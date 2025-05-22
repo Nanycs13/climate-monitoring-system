@@ -13,20 +13,14 @@ import org.springframework.stereotype.Repository;
 
 import com.google.gson.reflect.TypeToken;
 
-/**
- * Repositório para persistência de notificações em arquivo JSON.
- * Segue o princípio SRP ao ter apenas a responsabilidade de gerenciar a
- * persistência de notificações.
- */
+
 @Repository
 public class NotificacaoRepository {
     private static final String ARQUIVO_NOTIFICACOES = "dados/notificacoes.json";
     private static final Type TIPO_LISTA = new TypeToken<List<Notificacao>>() {
     }.getType();
 
-    /**
-     * Construtor que garante a existência do diretório de dados.
-     */
+
     public NotificacaoRepository() {
         File diretorio = new File("dados");
         if (!diretorio.exists()) {
@@ -34,11 +28,7 @@ public class NotificacaoRepository {
         }
     }
 
-    /**
-     * Lista todas as notificações.
-     * 
-     * @return Lista de notificações
-     */
+
     public List<Notificacao> listarTodos() {
         try {
             File arquivo = new File(ARQUIVO_NOTIFICACOES);
@@ -52,12 +42,7 @@ public class NotificacaoRepository {
         }
     }
 
-    /**
-     * Salva a lista de notificações no arquivo JSON.
-     * 
-     * @param notificacoes Lista de notificações a ser salva
-     * @return true se a operação foi bem-sucedida, false caso contrário
-     */
+
     public boolean salvarTodos(List<Notificacao> notificacoes) {
         try {
             JsonUtil.writeJsonList(ARQUIVO_NOTIFICACOES, notificacoes);
@@ -68,12 +53,7 @@ public class NotificacaoRepository {
         }
     }
 
-    /**
-     * Adiciona uma nova notificação.
-     * 
-     * @param notificacao Notificação a ser adicionada
-     * @return true se a operação foi bem-sucedida, false caso contrário
-     */
+
     public boolean adicionar(Notificacao notificacao) {
         List<Notificacao> notificacoes = listarTodos();
         notificacoes.add(notificacao);
