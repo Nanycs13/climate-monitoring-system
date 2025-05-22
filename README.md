@@ -1,119 +1,82 @@
-# Climate Monitoring System
+# Sistema de Monitoramento Climático para São Diadério - BA
 
-Este projeto é um sistema de monitoramento climático desenvolvido em **Java** utilizando o framework **Spring Boot**. O objetivo do sistema é fornecer uma base inicial para monitorar e gerenciar dados relacionados ao clima. 
-
----
-
-## 🚀 O que foi feito até agora?
-
-### 1. **Estrutura Inicial do Projeto**
-- O projeto foi configurado utilizando o **Spring Boot**.
-- Foi criado um arquivo `pom.xml` para gerenciar as dependências do Maven, incluindo:
-  - `spring-boot-starter-web` para desenvolvimento de APIs REST.
-  - `spring-boot-starter-json` e `jackson-databind` para manipulação de dados JSON.
-  - `spring-boot-starter-actuator` para monitoramento da aplicação.
-  - `spring-boot-devtools` para facilitar o desenvolvimento com funcionalidades como LiveReload.
-  - `lombok` para reduzir boilerplate no código.
-  - Dependências de teste, como `spring-boot-starter-test` e `gson`.
+Este projeto é um sistema de monitoramento climático desenvolvido em **Java** utilizando o framework **Spring Boot**. O objetivo principal é fornecer uma ferramenta robusta para monitorar e gerenciar dados climáticos específicos de São Diadério, Bahia, com um foco especial em análises para a agricultura sustentável na região oeste da Bahia.
 
 ---
 
-### 2. **Configuração do Maven**
-- O **Maven Wrapper** foi configurado, permitindo que o projeto seja facilmente executado sem a necessidade de instalar o Maven globalmente.
-- Foi incluído o arquivo `mvnw.cmd` para facilitar o uso do Maven em sistemas Windows.
-- O arquivo `pom.xml` foi ajustado para evitar duplicidades nas dependências e plugins.
+## 🌟 Funcionalidades Atuais
+
+Atualmente, o sistema oferece as seguintes funcionalidades:
+
+* **Estrutura Inicial do Projeto:** Configurado com Spring Boot e Maven para gerenciamento de dependências.
+* **APIs REST para Dados Climáticos:** Endpoints para obter dados climáticos atuais e previsão.
+* **Boletim Climático Detalhado:** Geração de boletins formatados com temperatura, umidade, condições e análise de risco agrícola.
+* **Análise de Risco Agrícola:** Previsão de risco para plantio nos próximos 3 dias, considerando temperatura e precipitação.
+* **Notificações Automáticas:** Envio periódico de boletins climáticos para usuários logados.
+* **Sistema de Usuários:** Autenticação e cadastro de usuários, com persistência em arquivo JSON.
+* **Persistência de Dados:** Uso de arquivos JSON para armazenar dados de usuários e histórico de notificações.
+* **Controle de Versão:** Projeto inicializado e sincronizado com GitHub.
+* **Interface de Terminal Interativa:** Menu principal e menu de usuário com opções para interagir com o sistema.
+* **Alertas Especiais:** Notificações de alerta para condições climáticas extremas (temperatura alta, umidade baixa).
 
 ---
 
-### 3. **Estrutura do Código**
-- Foi criada a classe principal `ClimatemonitoringApplication.java`, que serve como ponto de entrada para a aplicação Spring Boot.
-- Inicialmente, foi configurado um arquivo `application.properties` em `src/main/resources` para ajustes simples na aplicação.
+## 🚀 Tecnologias Utilizadas
+
+* **Java 17+**: Linguagem de programação principal.
+* **Spring Boot**: Framework para construção de aplicações Java.
+    * `spring-boot-starter-web`: Para desenvolvimento de APIs REST.
+    * `spring-boot-starter-json` e `jackson-databind`: Para manipulação de dados JSON.
+    * `spring-boot-starter-actuator`: Para monitoramento da aplicação.
+    * `spring-boot-devtools`: Para facilitar o desenvolvimento com LiveReload.
+    * `spring-boot-starter-test`: Para testes.
+* **Maven**: Ferramenta de automação de construção e gerenciamento de dependências.
+    * **Maven Wrapper**: Permite a execução do projeto sem a necessidade de instalar o Maven globalmente.
+* **Lombok**: Biblioteca para reduzir código boilerplate.
+* **Gson**: Biblioteca para serialização/desserialização JSON.
+* **OpenWeatherMap API**: API externa para obtenção de dados climáticos reais.
 
 ---
 
-### 4. **Controle de Versão**
-- O repositório foi inicializado com **Git**.
-- O código foi sincronizado com o GitHub no repositório: [Climate Monitoring System](https://github.com/Nanycs13/climate-monitoring-system).
-- Foram realizados os seguintes passos no GitHub:
-  - Configuração do branch principal `main`.
-  - Resolução de conflitos entre o repositório local e remoto.
-  - Push bem-sucedido dos arquivos para o repositório remoto.
+## 🛠️ Como Rodar o Projeto
 
----
+### Pré-requisitos
 
-## 🛠️ Como rodar o projeto?
+* **Java 17** ou versão superior instalado.
+* **Git** instalado no seu sistema.
+* Opcional: Maven instalado globalmente (não necessário se usar o Maven Wrapper).
+* Uma chave de API válida do OpenWeatherMap. Você precisará adicioná-la no arquivo `src/main/resources/application.properties` como `openweathermap.api.key=SUA_CHAVE_AQUI`.
 
-1. **Pré-requisitos**
-   - **Java 17** ou versão superior instalado.
-   - Git instalado no seu sistema.
-   - Opcional: Maven instalado globalmente (não necessário se usar o Maven Wrapper).
+### Passos para Execução
 
-2. **Clonar o repositório**
-   ```bash
-   git clone https://github.com/Nanycs13/climate-monitoring-system.git
-   cd climate-monitoring-system/climatemonitoring
-   ```
+1.  **Clonar o repositório:**
 
-3. **Executar o projeto**
-   - Com o Maven Wrapper:
-     ```bash
-     ./mvnw spring-boot:run
-     ```
-   - Ou com Maven global:
-     ```bash
-     mvn spring-boot:run
-     ```
+    ```bash
+    git clone [https://github.com/Nanycs13/climate-monitoring-system.git](https://github.com/Nanycs13/climate-monitoring-system.git)
+    cd climate-monitoring-system/climatemonitoring
+    ```
 
-4. **Acessar a aplicação**
-   - Acesse o sistema em: [http://localhost:8080](http://localhost:8080).
+2.  **Configurar a chave da API do OpenWeatherMap:**
+    Abra o arquivo `src/main/resources/application.properties` e substitua `c83a9b491f99c00c44dfd4af7d22b870` pela sua chave de API do OpenWeatherMap.
 
----
+3.  **Executar o projeto:**
 
-## 📂 Estrutura do Projeto
-```
-climatemonitoring
-├── src
-│   ├── main
-│   │   ├── java
-│   │   │   └── com.example.climatemonitoring
-│   │   │       ├── ClimatemonitoringApplication.java
-│   │   ├── resources
-│   │       └── application.properties
-│   └── test
-│       ├── java
-│           └── com.example.climatemonitoring
-│               └── ClimatemonitoringApplicationTests.java
-├── .gitignore
-├── mvnw
-├── mvnw.cmd
-├── pom.xml
-└── README.md
-```
+    * Com o Maven Wrapper:
+        ```bash
+        ./mvnw spring-boot:run
+        ```
+    * Ou com Maven global:
+        ```bash
+        mvn spring-boot:run
+        ```
 
----
-
-## 🌟 Próximos Passos
-
-### Funcionalidades Planejadas:
-- Criação de endpoints REST para processar dados climáticos.
-- Integração com APIs externas para obter dados meteorológicos.
-- Persistência de dados utilizando um banco de dados relacional (ex.: MySQL ou PostgreSQL).
-- Testes unitários e de integração para garantir a qualidade do código.
-
----
-
-## 🤝 Contribuindo
-1. Faça um fork do repositório.
-2. Crie uma branch para sua funcionalidade (`git checkout -b minha-funcionalidade`).
-3. Faça commit das suas alterações (`git commit -m 'Adicionei minha funcionalidade'`).
-4. Faça push para a branch (`git push origin minha-funcionalidade`).
-5. Abra um Pull Request.
+4.  **Acessar a aplicação (se aplicável):**
+    O sistema é executado em modo de terminal. As APIs REST podem ser acessadas em: [http://localhost:8080](http://localhost:8080).
 
 ---
 
 ## 📜 Licença
+
 Este projeto é apenas para fins educacionais e não possui uma licença específica no momento.
 
 ---
-
-Se tiver dúvidas ou sugestões, por favor, entre em contato ou abra uma **issue** no repositório.
