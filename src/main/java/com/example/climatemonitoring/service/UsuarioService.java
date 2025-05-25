@@ -40,7 +40,6 @@ public class UsuarioService {
                 .toList();
     }
 
-
     public List<Usuario> listarTodos() {
         return usuarioRepository.listarTodos();
     }

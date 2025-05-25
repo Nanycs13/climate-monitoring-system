@@ -72,7 +72,6 @@ public class ClimaController {
             Clima clima = climaService.obterDadosClimaticos();
             String[] risco = climaService.obterAnaliseRisco();
 
-            // Criar objeto resumido para dashboard
             var dashboard = new Object() {
                 public final String cidade = "Luís Eduardo Magalhães - BA";
                 public final double temperatura = clima.getTemperatura();

@@ -49,6 +49,6 @@ public class Usuario {
         return "Usuario{" +
                 "nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
-                '}'; // Não incluímos a senha no toString por questões de segurança
+                '}';
     }
 }

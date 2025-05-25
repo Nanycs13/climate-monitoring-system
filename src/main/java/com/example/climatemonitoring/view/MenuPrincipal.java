@@ -6,8 +6,8 @@ import com.example.climatemonitoring.service.NotificacaoScheduler;
 import com.example.climatemonitoring.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.context.ConfigurableApplicationContext; // Importar para acesso ao contexto da aplicação
-import org.springframework.boot.SpringApplication; // Importar para encerrar a aplicação
+import org.springframework.context.ConfigurableApplicationContext; 
+import org.springframework.boot.SpringApplication; 
 
 @Component
 public class MenuPrincipal {

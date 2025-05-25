@@ -68,7 +68,7 @@ public class UsuarioRepository {
     public boolean adicionar(Usuario usuario) {
         List<Usuario> usuarios = listarTodos();
 
-        // Verifica se já existe um usuário com o mesmo email
+
         for (Usuario u : usuarios) {
             if (u.getEmail().equals(usuario.getEmail())) {
                 return false;

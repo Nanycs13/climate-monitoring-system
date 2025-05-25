@@ -112,16 +112,13 @@ public class NotificacaoScheduler {
         }
     }
 
-    private void enviarNotificacaoSistema(Usuario usuario, String mensagem) {
-        try {
-            notificacaoService.registrarNotificacao(
-                    "SISTEMA: " + mensagem + " (Para: " + usuario.getNome() + ")");
-            logger.debug("Notificação enviada para: {}", usuario.getNome());
-
-        } catch (Exception e) {
-            logger.error("Erro ao enviar notificação para usuário: {}", usuario.getNome(), e);
-        }
+   private void enviarNotificacaoSistema(Usuario usuario, String mensagem) {
+    try {
+        notificacaoService.enviarNotificacaoAutomatica(usuario, mensagem);
+    } catch (Exception e) {
+        logger.error("Erro ao enviar notificação para {}: {}", usuario.getEmail(), e.getMessage());
     }
+}
 
     public void pararScheduler() {
         schedulerAtivo = false;

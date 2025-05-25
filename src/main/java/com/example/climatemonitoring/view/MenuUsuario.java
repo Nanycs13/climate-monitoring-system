@@ -66,7 +66,7 @@ public class MenuUsuario {
                     verAnaliseRisco();
                     break;
                 case 3:
-                    verHistoricoNotificacoes();
+                    verHistoricoNotificacoes(usuario);  
                     break;
                 case 0:
                     sair = true;
@@ -131,7 +131,7 @@ public class MenuUsuario {
                     terminal.exibirMensagem("Erro na notificação automática: " + e.getMessage());
                 }
             }
-        }, 20, 20, TimeUnit.SECONDS); // Primeira execução em 20s, depois a cada 20s
+        }, 20, 20, TimeUnit.SECONDS); 
     }
 
     private void verificarAlertasEspeciais(Usuario usuario) {
@@ -225,16 +225,18 @@ public class MenuUsuario {
         terminal.pausar();
     }
 
-    private void verHistoricoNotificacoes() {
+    private void verHistoricoNotificacoes(Usuario usuario) {  
         terminal.limparTela();
-        terminal.exibirMensagem("=== HISTÓRICO DE NOTIFICAÇÕES ===");
+        terminal.exibirMensagem("=== HISTÓRICO DE NOTIFICAÇÕES PESSOAIS ===");
 
-        List<Notificacao> historico = notificacaoService.listarHistorico();
+        String emailUsuario = usuario.getEmail();
+        
+        List<Notificacao> historico = notificacaoService.listarHistoricoUsuario(emailUsuario);
 
         if (historico.isEmpty()) {
-            terminal.exibirMensagem("Nenhuma notificação registrada.");
+            terminal.exibirMensagem("Nenhuma notificação registrada para você.");
         } else {
-            terminal.exibirMensagem("Total de notificações: " + historico.size());
+            terminal.exibirMensagem("Total de notificações pessoais: " + historico.size());
             terminal.exibirMensagem("Últimas " + Math.min(10, historico.size()) + " notificações:");
             terminal.exibirMensagem("=================================");
             for (int i = 0; i < Math.min(10, historico.size()); i++) {
