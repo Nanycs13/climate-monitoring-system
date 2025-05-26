@@ -25,7 +25,7 @@ public class ClimaController {
             return ResponseEntity.ok(clima);
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                    .body("Erro ao obter dados climáticos de Luís Eduardo Magalhães: " + e.getMessage());
+                    .body("Erro ao obter dados climáticos de São Desidério: " + e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class ClimaController {
     public ResponseEntity<String> verificarStatus() {
         boolean status = climaService.verificarStatusAPI();
         if (status) {
-            return ResponseEntity.ok("✅ API funcionando corretamente para Luís Eduardo Magalhães");
+            return ResponseEntity.ok("✅ API funcionando corretamente para São Desidério");
         } else {
             return ResponseEntity.status(503)
                     .body("❌ API indisponível ou erro na configuração");
@@ -73,7 +73,7 @@ public class ClimaController {
             String[] risco = climaService.obterAnaliseRisco();
 
             var dashboard = new Object() {
-                public final String cidade = "Luís Eduardo Magalhães - BA";
+                public final String cidade = "São Desidério - BA";
                 public final double temperatura = clima.getTemperatura();
                 public final double umidade = clima.getUmidade();
                 public final String condicoes = clima.getCondicoes();

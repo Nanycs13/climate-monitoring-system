@@ -54,7 +54,7 @@ public class ClimaService {
             String dataHora = LocalDateTime.now().format(formatter);
 
             StringBuilder boletim = new StringBuilder();
-            boletim.append("=== BOLETIM CLIMÁTICO - LUÍS EDUARDO MAGALHÃES/BA ===\n");
+            boletim.append("=== BOLETIM CLIMÁTICO - SÃO DESIDÉRIO/BA ===\n");
             boletim.append("Data/Hora: ").append(dataHora).append("\n");
             boletim.append("Localização: ").append(clima.getLocalizacao()).append("\n\n");
 
@@ -75,7 +75,7 @@ public class ClimaService {
             return boletim.toString();
 
         } catch (Exception e) {
-            return "❌ Erro ao gerar boletim climático de Luís Eduardo Magalhães: " + e.getMessage();
+            return "❌ Erro ao gerar boletim climático de São Desidério: " + e.getMessage();
         }
     }
 
