@@ -1,13 +1,5 @@
 package com.example.climatemonitoring.view;
 
-import com.example.climatemonitoring.models.Notificacao;
-import com.example.climatemonitoring.models.Usuario;
-import com.example.climatemonitoring.models.observers.UsuarioObserver;
-import com.example.climatemonitoring.service.ClimaService;
-import com.example.climatemonitoring.service.NotificacaoService;
-import com.example.climatemonitoring.service.NotificacaoScheduler;
-import com.example.climatemonitoring.service.UsuarioService;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,6 +9,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.example.climatemonitoring.models.Notificacao;
+import com.example.climatemonitoring.models.Usuario;
+import com.example.climatemonitoring.models.observers.UsuarioObserver;
+import com.example.climatemonitoring.service.ClimaService;
+import com.example.climatemonitoring.service.NotificacaoScheduler;
+import com.example.climatemonitoring.service.NotificacaoService;
+import com.example.climatemonitoring.service.UsuarioService;
 
 @Component
 public class MenuUsuario {
@@ -60,10 +60,10 @@ public class MenuUsuario {
 
             switch (opcao) {
                 case 1:
-                    verBoletimClimatico();
+                    verBoletimClimatico(usuario);
                     break;
                 case 2:
-                    verAnaliseRisco();
+                    verAnaliseRisco(usuario);
                     break;
                 case 3:
                     verHistoricoNotificacoes(usuario);  
@@ -121,7 +121,8 @@ public class MenuUsuario {
                             "NOTIFICAÇÃO AUTOMÁTICA #%d\n%s\n\n%s",
                             contadorNotificacoes, timestamp, boletimAutomatico);
 
-                    notificacaoService.registrarNotificacao(mensagemCompleta);
+                    // Registrar notificação específica para o usuário
+                    notificacaoService.registrarNotificacaoUsuario(mensagemCompleta, usuario.getEmail());
 
                     terminal.exibirNotificacaoEmTempoReal(notificacaoSimples);
 
@@ -142,17 +143,18 @@ public class MenuUsuario {
                 String alerta = "ALERTA TEMPERATURA ALTA: " + String.format("%.1f°C", clima.getTemperatura()) +
                         "\nRisco para plantações em São Desidério!";
                 terminal.exibirAlerta(alerta);
-                notificacaoService.registrarNotificacao("ALERTA CRÍTICO: " + alerta);
+                notificacaoService.registrarNotificacaoUsuario("ALERTA CRÍTICO: " + alerta, usuario.getEmail());
             }
 
             if (clima.getUmidade() < 20) {
                 String alerta = "ALERTA UMIDADE BAIXA: " + String.format("%.0f%%", clima.getUmidade()) +
                         "\nConsidere irrigação adicional!";
                 terminal.exibirAlerta(alerta);
-                notificacaoService.registrarNotificacao("ALERTA UMIDADE: " + alerta);
+                notificacaoService.registrarNotificacaoUsuario("ALERTA UMIDADE: " + alerta, usuario.getEmail());
             }
 
         } catch (Exception e) {
+            // Log do erro mas não interrompe o fluxo
         }
     }
 
@@ -187,11 +189,11 @@ public class MenuUsuario {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 
         terminal.exibirMensagem(mensagemLogout);
-        notificacaoService.registrarNotificacao(mensagemLogout);
+        notificacaoService.registrarNotificacaoUsuario(mensagemLogout, usuario.getEmail());
         terminal.pausar();
     }
 
-    private void verBoletimClimatico() {
+    private void verBoletimClimatico(Usuario usuario) {
         terminal.limparTela();
         terminal.exibirMensagem("=== BOLETIM CLIMÁTICO ATUAL ===");
         terminal.exibirMensagem("São Desidério - Bahia");
@@ -200,6 +202,13 @@ public class MenuUsuario {
         try {
             String boletim = climaService.gerarBoletimClimatico();
             terminal.exibirMensagem(boletim);
+            
+            // Registrar que o usuário consultou o boletim
+            String acesso = String.format("CONSULTA MANUAL - Boletim climático acessado por %s às %s",
+                    usuario.getNome(), 
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            notificacaoService.registrarNotificacaoUsuario(acesso, usuario.getEmail());
+            
         } catch (Exception e) {
             terminal.exibirMensagem("Erro ao obter boletim: " + e.getMessage());
         }
@@ -207,7 +216,7 @@ public class MenuUsuario {
         terminal.pausar();
     }
 
-    private void verAnaliseRisco() {
+    private void verAnaliseRisco(Usuario usuario) {
         terminal.limparTela();
         terminal.exibirMensagem("=== ANÁLISE DE RISCO AGRÍCOLA ===");
         terminal.exibirMensagem("São Desidério - Próximos 3 dias");
@@ -218,6 +227,13 @@ public class MenuUsuario {
             for (String dia : analise) {
                 terminal.exibirMensagem(dia);
             }
+            
+            // Registrar que o usuário consultou a análise de risco
+            String acesso = String.format("CONSULTA MANUAL - Análise de risco acessada por %s às %s",
+                    usuario.getNome(), 
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            notificacaoService.registrarNotificacaoUsuario(acesso, usuario.getEmail());
+            
         } catch (Exception e) {
             terminal.exibirMensagem("Erro ao obter análise: " + e.getMessage());
         }
@@ -228,21 +244,38 @@ public class MenuUsuario {
     private void verHistoricoNotificacoes(Usuario usuario) {  
         terminal.limparTela();
         terminal.exibirMensagem("=== HISTÓRICO DE NOTIFICAÇÕES PESSOAIS ===");
+        terminal.exibirMensagem("Usuário: " + usuario.getNome() + " (" + usuario.getEmail() + ")");
+        terminal.exibirMensagem("==========================================");
 
-        String emailUsuario = usuario.getEmail();
-        
-        List<Notificacao> historico = notificacaoService.listarHistoricoUsuario(emailUsuario);
+        try {
+            String emailUsuario = usuario.getEmail();
+            List<Notificacao> historico = notificacaoService.listarHistoricoUsuario(emailUsuario);
 
-        if (historico.isEmpty()) {
-            terminal.exibirMensagem("Nenhuma notificação registrada para você.");
-        } else {
-            terminal.exibirMensagem("Total de notificações pessoais: " + historico.size());
-            terminal.exibirMensagem("Últimas " + Math.min(10, historico.size()) + " notificações:");
-            terminal.exibirMensagem("=================================");
-            for (int i = 0; i < Math.min(10, historico.size()); i++) {
-                terminal.exibirMensagem((i + 1) + ". " + historico.get(i).getMensagem());
-                terminal.exibirMensagem("---------------------------------");
+            if (historico.isEmpty()) {
+                terminal.exibirMensagem("Nenhuma notificação registrada para você ainda.");
+                terminal.exibirMensagem("As notificações aparecerão conforme você usar o sistema.");
+            } else {
+                terminal.exibirMensagem("Total de notificações pessoais: " + historico.size());
+                terminal.exibirMensagem("Últimas " + Math.min(15, historico.size()) + " notificações:");
+                terminal.exibirMensagem("=".repeat(50));
+                
+                // Mostrar as notificações mais recentes primeiro
+                int inicio = Math.max(0, historico.size() - 15);
+                for (int i = historico.size() - 1; i >= inicio; i--) {
+                    Notificacao notificacao = historico.get(i);
+                    terminal.exibirMensagem((historico.size() - i) + ". " + notificacao.getMensagem());
+                    terminal.exibirMensagem("-".repeat(30));
+                }
             }
+            
+            // Registrar que o usuário acessou o histórico
+            String acesso = String.format("CONSULTA HISTÓRICO - %s visualizou seu histórico de notificações às %s",
+                    usuario.getNome(), 
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            notificacaoService.registrarNotificacaoUsuario(acesso, usuario.getEmail());
+            
+        } catch (Exception e) {
+            terminal.exibirMensagem("Erro ao acessar histórico: " + e.getMessage());
         }
 
         terminal.pausar();
