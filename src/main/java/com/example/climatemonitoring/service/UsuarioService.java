@@ -3,6 +3,7 @@ package com.example.climatemonitoring.service;
 import com.example.climatemonitoring.data.UsuarioRepository;
 import com.example.climatemonitoring.models.Usuario;
 import org.springframework.stereotype.Service;
+import com.example.climatemonitoring.utils.EmailValidatorUtil; // Importa o validador
 
 import java.util.List;
 
@@ -25,6 +26,10 @@ public class UsuarioService {
     }
 
     public boolean cadastrar(String nome, String email, String senha) {
+        if (!EmailValidatorUtil.isEmailValido(email)) {
+            return false;
+        }
+
         if (usuarioRepository.buscarPorEmail(email) != null) {
             return false;
         }

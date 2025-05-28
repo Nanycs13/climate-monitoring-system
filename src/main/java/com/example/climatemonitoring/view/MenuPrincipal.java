@@ -6,8 +6,9 @@ import com.example.climatemonitoring.service.NotificacaoScheduler;
 import com.example.climatemonitoring.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.context.ConfigurableApplicationContext; 
-import org.springframework.boot.SpringApplication; 
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.SpringApplication;
+import com.example.climatemonitoring.utils.EmailValidatorUtil;
 
 @Component
 public class MenuPrincipal {
@@ -20,8 +21,8 @@ public class MenuPrincipal {
 
     @Autowired
     public MenuPrincipal(TerminalUtil terminal, UsuarioService usuarioService,
-                         MenuUsuario menuUsuario, ClimaService climaService,
-                         NotificacaoScheduler notificacaoScheduler, ConfigurableApplicationContext context) {
+            MenuUsuario menuUsuario, ClimaService climaService,
+            NotificacaoScheduler notificacaoScheduler, ConfigurableApplicationContext context) {
         this.terminal = terminal;
         this.usuarioService = usuarioService;
         this.menuUsuario = menuUsuario;
@@ -103,6 +104,12 @@ public class MenuPrincipal {
         String email = terminal.lerString("Email: ");
         String senha = terminal.lerString("Senha: ");
 
+        if (!EmailValidatorUtil.isEmailValido(email)) {
+            terminal.exibirMensagem("Erro: Email inválido. Use um formato válido como exemplo@dominio.com");
+            terminal.pausar();
+            return;
+        }
+
         boolean sucesso = usuarioService.cadastrar(nome, email, senha);
 
         if (sucesso) {
@@ -157,7 +164,6 @@ public class MenuPrincipal {
                 terminal.exibirMensagem("API funcionando corretamente!");
                 terminal.exibirMensagem("Conexão com OpenWeatherMap: OK");
                 terminal.exibirMensagem("Dados de São Desidério: Disponíveis");
-
 
                 var clima = climaService.obterDadosClimaticos();
                 terminal.exibirMensagem("");
